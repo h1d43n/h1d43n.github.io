@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>PreyCSPdle</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        PreyCSPdle
+      </div>
+      <div class="description">
+        Prey CSP 譜面のランダムで選択された一部分が表示されるだけです。
+      </div>
+      <div class="buttons">
+        <button onclick="generate()">Generate</button>
+      </div>
+      <div class="result">
+        <div id="patterns" class="patterns" style="display:none"></div>
+        <div id="copy" class="copy" style="display:none">
+          <button onclick="copy()">結果をクリップボードに保存</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
