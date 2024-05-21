@@ -1,4 +1,6 @@
 import * as THREE from '../third_party/three/build/three.module.js';
+import { FontLoader } from '../third_party/three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from '../third_party/three/examples/jsm/geometries/TextGeometry.js';
 
 const params = {
   aspectRatio: 0,
@@ -17,7 +19,7 @@ const globalItems = {
   renderer: null,
 }
 
-const LIGHT_COLOR = '0xffffff';
+const LIGHT_COLOR = '#ffffff';
 const LIGHT_INTENSITY = 1.00;
 const TEXT_SIZE = 8;
 const TEXT = '祝';
@@ -26,7 +28,7 @@ function initialize() {
   initScene();
   initCamera();
   initRenderer();
-  const light = initLight();
+  const light = initLight(-100, 100, 100);
   const container = init3DObjects();
   globalItems.scene.add(light, container);
   window.addEventListener('resize', update);
@@ -38,6 +40,7 @@ function initScene() {
   const scene = new THREE.Scene();
   params.aspectRatio = window.innerWidth / window.innerHeight;
   params.pov = 60;
+  console.info(scene.position);
   globalItems.scene = scene;
 }
 
@@ -53,6 +56,7 @@ function initCamera() {
 
 function initRenderer() {
   const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   document.getElementById('render').appendChild(renderer.domElement);
 
@@ -73,9 +77,9 @@ function init3DObjects() {
 }
 
 function initTextModel(container) {
-  const fontLoader = new THREE.FontLoader();
+  const fontLoader = new FontLoader();
   fontLoader.load(
-    '../third_party/three/examples/fonts/helvetiker_regular.typeface.json',
+    './third_party/three/examples/fonts/helvetiker_regular.typeface.json',
     function(font) {
       generateTextGeometory(font, container);
     }
@@ -83,7 +87,7 @@ function initTextModel(container) {
 }
 
 function generateTextGeometory(font, container) {
-  const textGeometry = new THREE.TextGeometry(TEXT, {
+  const textGeometry = new TextGeometry(TEXT, {
     font: font,
     size: TEXT_SIZE,
     height: 1,
@@ -94,7 +98,10 @@ function generateTextGeometory(font, container) {
 
   const material = new THREE.MeshToonMaterial({ color: 0xdd5555 });
   const textMesh = new THREE.Mesh(textGeometry, material);
+  textMesh.position.set(globalItems.scene.position.x, globalItems.scene.position.y, globalItems.scene.position.z);
+
   const vector = new THREE.Vector3();
+  vector.copy(textMesh.position).multiplyScalar(2);
 
   textMesh.lookAt(vector);
   container.add(textMesh);
@@ -110,6 +117,7 @@ function update() {
   globalItems.camera.aspect = params.aspectRatio;
   globalItems.camera.updateProjectionMatrix();
   globalItems.renderer.setSize(window.innerWidth, window.innerHeight);
+  beginRender();
 }
 
 window.addEventListener('load', initialize);
